@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 @Slf4j
 @Service
@@ -38,5 +39,10 @@ public class RateLimiterServiceImpl implements RateLimiterService {
         limiter.setUsername(userName);
         limiter.setStartTime(Instant.now().getEpochSecond());
         return rateLimiterRepository.save(limiter);
+    }
+
+    @Override
+    public List<RateLimiter> findAll() {
+        return rateLimiterRepository.findAll();
     }
 }
