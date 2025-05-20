@@ -11,6 +11,6 @@ public class RateLimiter {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String username;
-    private Long hitCount;
+    private Long hitCount = 0L;
     private Long startTime;
 }
