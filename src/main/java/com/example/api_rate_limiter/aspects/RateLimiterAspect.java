@@ -1,5 +1,6 @@
 package com.example.api_rate_limiter.aspects;
 
+import com.example.api_rate_limiter.exceptions.types.TooManyRequestsException;
 import com.example.api_rate_limiter.rate_limiter.entity.RateLimiter;
 import com.example.api_rate_limiter.rate_limiter.service.RateLimiterService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,7 +23,7 @@ public class RateLimiterAspect {
         String userName = getUserName();
         RateLimiter limiter = rateLimiterService.findByUserName(userName);
         if(limiter.getHitCount() >= MAX_TRY) {
-            throw new RuntimeException("Rate limit exceeded");
+            throw new TooManyRequestsException(RateLimiter.class, "Rate limit exceeded");
         }
         limiter.setHitCount(limiter.getHitCount() + 1);
         rateLimiterService.saveRateLimiter(limiter);
