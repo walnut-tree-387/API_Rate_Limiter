@@ -1,5 +1,5 @@
 # API_Rate_Limiter
-With this project I will try to explore AOP with spring boot and build a basic Rate Limiter Application. Basically different user can hit a dummy api not more than a certain amount of time. Project will also cover the scheduling options to reset entries for a certain user after time period ends.
+With this project I will try to explore AOP with spring boot and build a basic Rate Limiter Application. Different user can hit a dummy api not more than a certain amount of time. Project will also cover the scheduling options to reset entries for a certain user after time period ends.
 
 @USE
 1. We have exposed an dummy api with route "/api/v1/dummy".
