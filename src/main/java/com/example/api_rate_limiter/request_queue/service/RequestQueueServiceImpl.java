@@ -35,6 +35,7 @@ public class RequestQueueServiceImpl implements RequestQueueService {
         long limit = Math.min(queuedRequest.size(), 5L);
         for(long i = 0L; i < limit ; i++){
             RequestQueue request = queuedRequest.get((int) i);
+            ///  TODO After processing the request user should be notified.
             request.setQueueStatus(QueueStatus.SUCCEEDED);
             requestQueueRepository.save(request);
         }
@@ -46,6 +47,7 @@ public class RequestQueueServiceImpl implements RequestQueueService {
         List<RequestQueue> queuedRequest = getCurrentRequestQueue();
         if(!queuedRequest.isEmpty()){
             RequestQueue tobeProcessed = queuedRequest.get(0);
+            ///  TODO After processing the request user should be notified.
             tobeProcessed.setQueueStatus(QueueStatus.SUCCEEDED);
             requestQueueRepository.save(tobeProcessed);
             log.info("Processed queued request for user {}", tobeProcessed.getUserName());
