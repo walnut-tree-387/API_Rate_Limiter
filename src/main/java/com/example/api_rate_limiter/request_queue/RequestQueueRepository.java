@@ -3,6 +3,7 @@ package com.example.api_rate_limiter.request_queue;
 import com.example.api_rate_limiter.request_queue.entity.RequestQueue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface RequestQueueRepository extends JpaRepository<RequestQueue, Long
     List<RequestQueue> getCurrentRequestQueue();
     @Query("    SELECT COUNT(rq) FROM RequestQueue rq WHERE  rq.queueStatus = 'PENDING' ")
     Long getNextRequestQueueSerialNumber();
+    @Query("    SELECT rq FROM RequestQueue rq WHERE  rq.queueStatus = 'PENDING' AND rq.userName = :username" +
+            "   ORDER BY rq.createdAt ASC ")
+    List<RequestQueue> checkIfUserHasQueuedRequest(@Param("username") String username);
 }

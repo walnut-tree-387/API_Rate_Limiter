@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class RateLimiterServiceImpl implements RateLimiterService {
     private final RateLimiterRepository rateLimiterRepository;
-    private static final Long MAX_TRY = 5L;
+    private static final Long MAX_TRY = 4L;
     private final RequestQueueService requestQueueService;
 
     public RateLimiterServiceImpl(RateLimiterRepository rateLimiterRepository, RequestQueueService requestQueueService) {
@@ -56,9 +56,9 @@ public class RateLimiterServiceImpl implements RateLimiterService {
     public void handleRequests(String userName, String callbackUrl) {
         RateLimiter limiter = findByUserName(userName);
         if(limiter.getHitCount() >= MAX_TRY) {
-            RequestQueue newRequest = requestQueueService.addNewRequest(callbackUrl, userName);
+            Long userSerial = requestQueueService.addNewRequest(callbackUrl, userName);
             throw new TooManyRequestsException(RateLimiter.class, "Rate limit exceeded",
-                    newRequest.getSerialNumber(), newRequest.getSerialNumber() * 10L);
+                    userSerial, userSerial * 10L);
         }
         limiter.setHitCount(limiter.getHitCount() + 1);
         saveRateLimiter(limiter);

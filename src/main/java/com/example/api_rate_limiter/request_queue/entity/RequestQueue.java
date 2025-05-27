@@ -11,7 +11,6 @@ public class RequestQueue {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String userName;
-    private Long serialNumber;
     private Long createdAt;
     private Long processedAt;
 
