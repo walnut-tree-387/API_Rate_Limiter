@@ -9,4 +9,5 @@ public interface RateLimiterService {
     void saveRateLimiter(RateLimiter rateLimiter);
     RateLimiter create(String userName);
     List<RateLimiter> findAll();
+    void handleRequests(String userName, String callbackUrl);
 }

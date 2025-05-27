@@ -20,6 +20,8 @@ public class GlobalExceptionHandler {
         Map<String,Object> response = new HashMap<>();
         response.put("code", HttpStatus.TOO_MANY_REQUESTS.value());
         response.put("Error message", e.getMessage());
+        response.put("Queue Position", e.getQueuePosition());
+        response.put("Estimated wait time", e.getEstimatedWaitTime());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

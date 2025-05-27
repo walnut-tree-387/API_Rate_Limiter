@@ -1,7 +1,10 @@
 package com.example.api_rate_limiter.rate_limiter.service;
 
+import com.example.api_rate_limiter.exceptions.types.TooManyRequestsException;
 import com.example.api_rate_limiter.rate_limiter.entity.RateLimiter;
 import com.example.api_rate_limiter.rate_limiter.repository.RateLimiterRepository;
+import com.example.api_rate_limiter.request_queue.entity.RequestQueue;
+import com.example.api_rate_limiter.request_queue.service.RequestQueueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,12 @@ import java.util.Optional;
 @Service
 public class RateLimiterServiceImpl implements RateLimiterService {
     private final RateLimiterRepository rateLimiterRepository;
+    private static final Long MAX_TRY = 5L;
+    private final RequestQueueService requestQueueService;
 
-    public RateLimiterServiceImpl(RateLimiterRepository rateLimiterRepository) {
+    public RateLimiterServiceImpl(RateLimiterRepository rateLimiterRepository, RequestQueueService requestQueueService) {
         this.rateLimiterRepository = rateLimiterRepository;
+        this.requestQueueService = requestQueueService;
     }
 
     @Override
@@ -44,5 +50,17 @@ public class RateLimiterServiceImpl implements RateLimiterService {
     @Override
     public List<RateLimiter> findAll() {
         return rateLimiterRepository.findAll();
+    }
+
+    @Override
+    public void handleRequests(String userName, String callbackUrl) {
+        RateLimiter limiter = findByUserName(userName);
+        if(limiter.getHitCount() >= MAX_TRY) {
+            RequestQueue newRequest = requestQueueService.addNewRequest(callbackUrl, userName);
+            throw new TooManyRequestsException(RateLimiter.class, "Rate limit exceeded",
+                    newRequest.getSerialNumber(), newRequest.getSerialNumber() * 10L);
+        }
+        limiter.setHitCount(limiter.getHitCount() + 1);
+        saveRateLimiter(limiter);
     }
 }

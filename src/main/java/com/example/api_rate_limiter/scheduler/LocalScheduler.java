@@ -17,7 +17,7 @@ public class LocalScheduler {
         this.limiterService = limiterService;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 5000)
     public void schedule() {
         List<RateLimiter> allEntries = limiterService.findAll();
         allEntries.forEach(limiter -> {
