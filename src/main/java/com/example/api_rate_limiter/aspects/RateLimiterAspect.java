@@ -3,13 +3,14 @@ package com.example.api_rate_limiter.aspects;
 import com.example.api_rate_limiter.exceptions.types.TooManyRequestsException;
 import com.example.api_rate_limiter.rate_limiter.entity.RateLimiter;
 import com.example.api_rate_limiter.rate_limiter.service.RateLimiterService;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
+@Slf4j
 @Component
 @Aspect
 public class RateLimiterAspect {
@@ -23,6 +24,7 @@ public class RateLimiterAspect {
         String userName = getUserName();
         RateLimiter limiter = rateLimiterService.findByUserName(userName);
         if(limiter.getHitCount() >= MAX_TRY) {
+            log.info("This user has exited the maximum number of requests for the limiter");
             throw new TooManyRequestsException(RateLimiter.class, "Rate limit exceeded");
         }
         limiter.setHitCount(limiter.getHitCount() + 1);

@@ -25,7 +25,7 @@ public class LocalScheduler {
                 limiter.setStartTime(System.currentTimeMillis());
                 limiter.setHitCount(0L);
                 limiterService.saveRateLimiter(limiter);
-                log.info("Updated Rate Limiter for {}", limiter.getUsername());
+                log.info("Rate Limiter has been reset for {}", limiter.getUsername());
             }
         });
     }
